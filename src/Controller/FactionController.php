@@ -39,9 +39,12 @@ class FactionController extends Controller
         $this->sendReponse(200, $this->factionModel->findAllFactions());
     }
 
-    public function getFactionById(int $id) {
+    public function getFactionById() {
 
-        $this->sendReponse(200, $this->factionModel->findOneFactionById($id));
+        $json = file_get_contents('php://input');
+        $userData = json_decode($json, true);
+
+        $this->sendReponse(200, $this->factionModel->findOneFactionById($userData['id']));
     }
 
     public function updateFaction() {
@@ -60,9 +63,12 @@ class FactionController extends Controller
         $this->sendReponse($status, [], $message);
     }
 
-    public function deleteFaction(int $id) {
+    public function deleteFaction() {
 
-        $isFactionDeleted = $this->factionModel->deleteOneFactionById($id);
+        $json = file_get_contents('php://input');
+        $userData = json_decode($json, true);
+
+        $isFactionDeleted = $this->factionModel->deleteOneFactionById($userData['id']);
 
         if ($isFactionDeleted) {
             http_response_code(204);

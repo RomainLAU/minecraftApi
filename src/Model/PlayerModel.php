@@ -39,12 +39,22 @@ class PlayerModel extends Model
             'faction_id' => $faction_id,
         ]);
     }
+    
+    public function deletePlayerFaction(int $id) 
+    {
+
+        $statement = $this->pdo->prepare('UPDATE `player` SET `faction_id` = null WHERE id = :id');
+
+        return $statement->execute([
+            'id' => $id,
+        ]);
+    }
 
     public function findOnePlayerById($id) 
     {
         $statement = $this->pdo->prepare('SELECT * FROM `player` LEFT JOIN `faction` ON `faction_id` = `faction`.id WHERE `player`.id = :id');
 
-        return $statement->execute([
+        $statement->execute([
             'id' => $id,
         ]);
 
@@ -53,7 +63,7 @@ class PlayerModel extends Model
 
     public function findAllPlayers()
     {
-        $statement = $this->pdo->prepare('SELECT * FROM `player`');
+        $statement = $this->pdo->prepare('SELECT * FROM `player` LEFT JOIN `faction` ON `faction_id` = `faction`.id');
 
         $statement->execute();
 

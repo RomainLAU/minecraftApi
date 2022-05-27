@@ -36,15 +36,20 @@ class PlayerController extends Controller
         $this->sendReponse(200, $this->playerModel->findAllPlayers());
     }
 
-    public function getPlayerById(int $id) {
+    public function getPlayerById() {
 
-        $userData = $this->playerModel->findOnePlayerById($id);
+        $json = file_get_contents('php://input');
+        $userData = json_decode($json, true);
 
-        header('Content-Type: application/json');
-        echo json_encode([
-            'status' => '200',
-            'data' => $userData,
-        ]);
+        $playerInfo = $this->playerModel->findOnePlayerById($userData['id']);
+
+        if ($playerInfo) {
+            http_response_code(200);
+            $status = 200;
+            $message = "Player informations found.";
+        }
+
+        $this->sendReponse($status, $playerInfo, $message);
     }
 
     public function updatePlayerById() {
@@ -76,15 +81,36 @@ class PlayerController extends Controller
         $this->sendReponse($status, [], $message);
     }
 
-    public function deletePlayer(int $id) {
+    public function deletePlayerFactionById() {
 
-        $userData = $this->playerModel->deleteOnePlayerById($id);
+        $json = file_get_contents('php://input');
+        $userData = json_decode($json, true);
 
-        header('Content-Type: application/json');
-        echo json_encode([
-            'status' => '200',
-            'data' => $userData,
-        ]);
+        $isPlayerFactionDeleted = $this->playerModel->deletePlayerFaction($userData['id']);
+
+        if ($isPlayerFactionDeleted) {
+            http_response_code(204);
+            $status = 204;
+            $message = "Player faction successfully leaved";
+        }
+
+        $this->sendReponse($status, [], $message);
+    }
+
+    public function deletePlayer() {
+
+        $json = file_get_contents('php://input');
+        $userData = json_decode($json, true);
+
+        $isPlayerDeleted = $this->playerModel->deleteOnePlayerById($userData['id']);
+
+        if ($isPlayerDeleted) {
+            http_response_code(202);
+            $status = 202;
+            $message = "Player faction successfully deleted";
+        }
+
+        $this->sendReponse($status, [], $message);
     }
 
     private function sendReponse(int $status, array $data = [], ?string $message = null)
