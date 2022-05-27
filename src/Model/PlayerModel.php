@@ -19,12 +19,23 @@ class PlayerModel extends Model
         ]);
     }
 
-    public function updatePlayerFaction(int $player_id, string $faction_id) 
+    public function updatePlayer(int $player_id, string $pseudo) 
     {
-        $statement = $this->pdo->prepare('UPDATE `player` SET `faction_id` = :faction_id WHERE id = :player_id');
+        $statement = $this->pdo->prepare('UPDATE `player` SET `pseudo` = :pseudo WHERE id = :player_id');
 
-        $statement->execute([
+        return $statement->execute([
             'player_id' => $player_id,
+            'pseudo' => $pseudo,
+        ]);
+    }
+
+    public function updatePlayerFaction(int $id, int $faction_id) 
+    {
+
+        $statement = $this->pdo->prepare('UPDATE `player` SET `faction_id` = :faction_id WHERE id = :id');
+
+        return $statement->execute([
+            'id' => $id,
             'faction_id' => $faction_id,
         ]);
     }
@@ -33,7 +44,7 @@ class PlayerModel extends Model
     {
         $statement = $this->pdo->prepare('SELECT * FROM `player` LEFT JOIN `faction` ON `faction_id` = `faction`.id WHERE `player`.id = :id');
 
-        $statement->execute([
+        return $statement->execute([
             'id' => $id,
         ]);
 

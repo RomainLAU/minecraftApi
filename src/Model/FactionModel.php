@@ -19,13 +19,14 @@ class FactionModel extends Model
         ]);
     }
 
-    public function updateFaction(int $faction_id) 
+    public function updateFaction(int $id, string $name, string $description)
     {
-        $statement = $this->pdo->prepare('UPDATE `player` SET `faction_id` = :faction_id WHERE id = :player_id');
+        $statement = $this->pdo->prepare('UPDATE `faction` SET `name` = :name, `description` = :description WHERE `id` = :id');
 
         return $statement->execute([
-            'player_id' => $player_id,
-            'faction_id' => $faction_id,
+            'name' => $name,
+            'description' => $description,
+            'id' => $id
         ]);
     }
 

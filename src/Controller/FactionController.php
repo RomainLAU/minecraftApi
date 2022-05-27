@@ -44,12 +44,12 @@ class FactionController extends Controller
         $this->sendReponse(200, $this->factionModel->findOneFactionById($id));
     }
 
-    public function updateFactionById() {
+    public function updateFaction() {
 
         $json = file_get_contents('php://input');
         $userData = json_decode($json, true);
 
-        $isFactionUpdated = $this->factionModel->updateFaction($userData['id'], $userData['faction_id']);
+        $isFactionUpdated = $this->factionModel->updateFaction($userData['id'], $userData['name'], $userData['description']);
 
         if ($isFactionUpdated) {
             http_response_code(204);

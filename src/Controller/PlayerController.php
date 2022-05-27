@@ -47,17 +47,33 @@ class PlayerController extends Controller
         ]);
     }
 
-    public function updatePlayerFactionById() {
+    public function updatePlayerById() {
 
         $json = file_get_contents('php://input');
         $userData = json_decode($json, true);
 
-        $this->playerModel->updatePlayerFaction($userData['id'], $userData['faction_id']);
+        $this->playerModel->updatePlayer($userData['id'], $userData['name']);
 
         echo json_encode([
             'status' => 200,
             'data' => $userData,
         ]);
+    }
+
+    public function updatePlayerFactionById() {
+
+        $json = file_get_contents('php://input');
+        $userData = json_decode($json, true);
+
+        $isPlayerFactionUpdated = $this->playerModel->updatePlayerFaction($userData['id'], $userData['faction']);
+
+        if ($isPlayerFactionUpdated) {
+            http_response_code(204);
+            $status = 204;
+            $message = "Player faction successfully updated";
+        }
+
+        $this->sendReponse($status, [], $message);
     }
 
     public function deletePlayer(int $id) {
